@@ -18,10 +18,7 @@ import {
 import { SiJavascript, SiTensorflow, SiFigma, SiBootstrap } from "react-icons/si";
 import { MdDesignServices } from "react-icons/md";
 
-// --- (projects, skillGroups, experience, publications, CONTACT, TYPE_PHRASES)
-// For brevity I'll keep these identical to your previous version.
-// If you need me to paste them I can, but this file assumes they are unchanged.
-
+/* ---------- DATA (unchanged) ---------- */
 const projects = [
   {
     id: 1,
@@ -164,6 +161,7 @@ const TYPE_PHRASES = [
   "Web Designer / Freelancer",
 ];
 
+/* ---------- COMPONENT ---------- */
 export default function Portfolio() {
   const formRef = useRef(null);
   const [theme, setTheme] = useState(() =>
@@ -179,7 +177,10 @@ export default function Portfolio() {
   const [active, setActive] = useState("home");
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
 
-  // Inject CSS (updated to fix contact form layout)
+  // NEW: menuOpen for mobile hamburger
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Inject CSS (updated to include mobile fixes + hamburger)
   useEffect(() => {
     const id = "portfolio-inline-styles-fixed-contact";
     const existing = document.getElementById(id);
@@ -205,17 +206,38 @@ export default function Portfolio() {
       }
 
       html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
-      .container{max-width:1100px;margin:0 auto;padding:20px}
-      .site-nav{position:sticky;top:0;background:linear-gradient(180deg,rgba(0,0,0,0.15),rgba(0,0,0,0));backdrop-filter:blur(6px);display:flex;justify-content:space-between;align-items:center;padding:10px 0;z-index:50}
+      /* ADD top padding so sticky nav doesn't overlap hero on mobile */
+      .container{max-width:1100px;margin:0 auto;padding:80px 20px 20px} 
+
+      /* NAV */
+      .site-nav{position:fixed;left:0;right:0;top:0;background:linear-gradient(180deg,rgba(0,0,0,0.06),rgba(0,0,0,0));backdrop-filter:blur(6px);display:flex;justify-content:space-between;align-items:center;padding:10px 20px;z-index:150;border-bottom:1px solid rgba(255,255,255,0.02)}
       .brand{font-weight:700;font-size:18px}
+      .nav-links{display:flex;gap:6px;align-items:center}
       .nav-links a{margin-left:12px;color:var(--text);text-decoration:none;padding:6px 8px;border-radius:8px}
       .nav-links a.active{background:rgba(124,155,255,0.12);color:var(--accent)}
-      .icon-btn{background:transparent;border:0;cursor:pointer;padding:8px;border-radius:8px}
+      .icon-btn{background:transparent;border:0;cursor:pointer;padding:8px;border-radius:8px;color:var(--text);font-size:18px}
+
+      /* mobile hamburger */
+      .hamburger{display:none;background:transparent;border:0;font-size:22px;color:var(--text);padding:8px;border-radius:8px}
+      .mobile-nav{display:none}
+      @media (max-width: 980px) {
+        .nav-links{display:none}
+        .hamburger{display:inline-flex}
+        .mobile-nav{display:flex;flex-direction:column;gap:10px;position:absolute;right:12px;top:58px;background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 12px 36px rgba(2,6,23,0.12)}
+      }
+
       .section{padding:48px 0}
       .hero{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:center;min-height:56vh}
-      @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-card{order:-1}}
+      @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-card{order:2}} /* ensure hero-card sits below content on mobile */
       .hero-left{display:flex;gap:20px;align-items:flex-start}
-      .avatar-circle{width:120px;height:120px;border-radius:999px;object-fit:cover;border:3px solid rgba(124,155,255,0.12);box-shadow:0 8px 28px rgba(0,0,0,0.2);cursor:pointer;transition:transform .18s}
+      /* center hero content on small screens */
+      @media(max-width:980px){
+        .hero-left{flex-direction:column;align-items:center;text-align:center;gap:12px}
+        .hero-ctas{flex-direction:column;width:100%;align-items:center}
+        .hero-ctas .btn{width:88%;max-width:320px}
+      }
+
+      .avatar-circle{width:120px;height:120px;border-radius:999px;object-fit:cover;border:3px solid rgba(124,155,255,0.12);box-shadow:0 8px 22px rgba(2,6,23,0.2);cursor:pointer;transition:transform .18s}
       .avatar-circle:hover{transform:scale(1.04)}
       .hero-title{font-size:34px;line-height:1.02;margin:0;font-weight:800}
       .accent{color:var(--accent)}
@@ -227,9 +249,10 @@ export default function Portfolio() {
       .socials a{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;color:var(--text);text-decoration:none}
       .hero-ctas{display:flex;gap:10px;margin-top:12px}
       .btn{padding:10px 14px;border-radius:10px;text-decoration:none;cursor:pointer;font-weight:600}
-      .btn-primary{background:var(--accent);color:white}
-      .btn-outline{border:1px solid rgba(255,255,255,0.06);background:transparent}
-      .card{background:var(--card);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 28px rgba(0,0,0,0.4)}
+      .btn-primary{background:var(--accent);color:white;border:0}
+      .btn-outline{border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)}
+
+      .card{background:var(--card);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 18px rgba(2,6,23,0.12)}
       .skills-grid{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
       .skill-group{min-width:200px;flex:1}
       .skill-item{display:flex;gap:12px;align-items:center;margin-bottom:12px}
@@ -243,10 +266,11 @@ export default function Portfolio() {
       @media(max-width:980px){.projects-grid{grid-template-columns:1fr}}
       .project-card{background:var(--card);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s}
       .project-thumb{width:100%;height:160px;object-fit:cover;background:#e2e8f0}
+      @media(max-width:520px){ .project-thumb{height:220px} .project-card{box-shadow:0 8px 18px rgba(2,6,23,0.08)} }
       .project-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
       .project-title{font-size:18px;margin:0;font-weight:700}
       .project-desc{color:var(--muted);margin:0;font-size:14px}
-      .tech-badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-right:6px;display:inline-block}
+      .tech-badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-right:6px;display:inline-block;color:var(--text)}
       .project-links{margin-top:auto;display:flex;gap:12px;align-items:center}
 
       /* Timeline */
@@ -261,8 +285,7 @@ export default function Portfolio() {
       /* Contact: FIXED LAYOUT */
       .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
       @media(max-width:980px){.contact-grid{grid-template-columns:1fr}}
-      /* make the contact form a vertical stack and ensure inputs are full-width */
-      .contact-form{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.03);}
+      .contact-form{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.03)}
       .contact-form input, .contact-form textarea{
         display:block;
         width:100%;
@@ -274,14 +297,28 @@ export default function Portfolio() {
         color:var(--text);
         resize:vertical;
       }
-      .contact-form input::placeholder, .contact-form textarea::placeholder{ color: rgba(255,255,255,0.45); }
+
+      /* Placeholder visibility for light mode & dark mode */
+      html:not(.dark) .contact-form input::placeholder,
+      html:not(.dark) .contact-form textarea::placeholder {
+        color: var(--muted);
+        opacity: 1;
+      }
+      html.dark .contact-form input::placeholder,
+      html.dark .contact-form textarea::placeholder {
+        color: rgba(230,238,248,0.45);
+        opacity: 1;
+      }
+
       .form-actions{display:flex;justify-content:flex-start;margin-top:6px}
+      @media(max-width:520px){ .form-actions{justify-content:center} .form-actions .btn{width:92%} }
+
       .contact-info .contact-socials{display:flex;gap:10px;margin-top:12px}
       .contact-socials a{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);text-decoration:none;color:var(--text)}
       .contact-socials a svg{margin-right:6px}
 
-      footer.footer{text-align:center;margin-top:28px;color:var(--muted);padding:18px 0}
-      @media(max-width:520px){.hero-title{font-size:28px}}
+      footer.footer{text-align:center;margin-top:20px;color:var(--muted);padding:10px 0;font-size:14px}
+      @media(max-width:520px){.hero-title{font-size:28px} .container{padding:80px 12px 18px}}
     `;
     document.head.appendChild(style);
     return () => {
@@ -370,6 +407,9 @@ export default function Portfolio() {
 
   const sectionVariant = { hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } };
 
+  // Helper: close mobile menu when navigating
+  const handleNavClick = () => setMenuOpen(false);
+
   return (
     <div className="container">
       <header className="site-nav" role="navigation" aria-label="Main navigation">
@@ -379,6 +419,7 @@ export default function Portfolio() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {/* Desktop nav */}
           <nav className="nav-links" aria-label="Page sections">
             <a href="#home" className={active === "home" ? "active" : ""}>Home</a>
             <a href="#projects" className={active === "projects" ? "active" : ""}>Projects</a>
@@ -387,6 +428,27 @@ export default function Portfolio() {
             <a href="#contact" className={active === "contact" ? "active" : ""}>Contact</a>
             <a href="#publications" className={active === "publications" ? "active" : ""}>Publications</a>
           </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            className="hamburger"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((s) => !s)}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+
+          {/* mobile nav panel */}
+          {menuOpen && (
+            <nav className="mobile-nav" aria-label="Mobile sections">
+              <a href="#home" onClick={handleNavClick}>Home</a>
+              <a href="#projects" onClick={handleNavClick}>Projects</a>
+              <a href="#skills" onClick={handleNavClick}>Skills</a>
+              <a href="#experience" onClick={handleNavClick}>Experience</a>
+              <a href="#contact" onClick={handleNavClick}>Contact</a>
+              <a href="#publications" onClick={handleNavClick}>Publications</a>
+            </nav>
+          )}
 
           <a href={CONTACT.resumePath} className="btn btn-outline" download style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
             <FaDownload /> Resume
@@ -440,9 +502,9 @@ export default function Portfolio() {
 
       {/* avatar modal */}
       {isAvatarOpen && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setIsAvatarOpen(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <img src="/avatar.png" alt="Larger portrait" className="modal-img" />
+        <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setIsAvatarOpen(false)} style={{position:'fixed',inset:0,display:'grid',placeItems:'center',background:'rgba(2,6,23,0.6)',zIndex:200}}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{maxWidth:420}}>
+            <img src="/avatar.png" alt="Larger portrait" className="modal-img" style={{width:'100%',borderRadius:14}} />
           </div>
         </div>
       )}
@@ -581,7 +643,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* CONTACT FORM: inputs now stack vertically and are full-width */}
+          {/* CONTACT FORM */}
           <form ref={formRef} className="contact-form" onSubmit={handleContact} aria-label="Contact form">
             <input name="name" placeholder="Your name" required />
             <input name="email" placeholder="Your email" type="email" required />
