@@ -1,0 +1,27 @@
+.site-root {
+  background: $bg;
+  color: $text;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0;
+
+  .brand { font-weight: bold; font-size: 1.4rem; }
+  .nav-links a { margin-left: 1rem; text-decoration: none; color: $text; }
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  @include card;
+}
