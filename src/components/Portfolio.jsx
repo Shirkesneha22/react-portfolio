@@ -180,7 +180,7 @@ export default function Portfolio() {
   // NEW: menuOpen for mobile hamburger
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Inject CSS (updated to include mobile fixes + hamburger)
+  // Inject CSS (updated to include mobile fixes + hamburger and video modal styles)
   useEffect(() => {
     const id = "portfolio-inline-styles-fixed-contact";
     const existing = document.getElementById(id);
@@ -237,8 +237,33 @@ export default function Portfolio() {
         .hero-ctas .btn{width:88%;max-width:320px}
       }
 
-      .avatar-circle{width:120px;height:120px;border-radius:999px;object-fit:cover;border:3px solid rgba(124,155,255,0.12);box-shadow:0 8px 22px rgba(2,6,23,0.2);cursor:pointer;transition:transform .18s}
+      /* avatar video circle */
+      .avatar-circle{
+        width:120px;
+        height:120px;
+        border-radius:999px;
+        object-fit:cover;
+        border:3px solid rgba(124,155,255,0.12);
+        box-shadow:0 8px 22px rgba(2,6,23,0.2);
+        cursor:pointer;
+        transition:transform .18s;
+      }
       .avatar-circle:hover{transform:scale(1.04)}
+      /* large modal video */
+      .modal-video {
+        width:100%;
+        height:auto;
+        border-radius:12px;
+        display:block;
+      }
+      .modal-wrapper {
+        max-width:640px;
+        width:94%;
+        box-shadow:0 30px 80px rgba(2,6,23,0.6);
+        border-radius:14px;
+        overflow:hidden;
+      }
+
       .hero-title{font-size:34px;line-height:1.02;margin:0;font-weight:800}
       .accent{color:var(--accent)}
       .role-type{color:var(--accent);font-weight:800}
@@ -463,7 +488,19 @@ export default function Portfolio() {
       {/* HERO */}
       <motion.section id="home" className="hero section" initial="hidden" animate="visible" variants={sectionVariant} transition={{ duration: 0.6 }}>
         <div className="hero-left">
-          <img src="/avatar.png" alt={CONTACT.name} className="avatar-circle" onClick={() => setIsAvatarOpen(true)} />
+          {/* === VIDEO AVATAR (small circular, loop) ===
+              Place your file at: public/avatar-wave.mp4
+          */}
+          <video
+            src="/avatar-wave.mp4"
+            className="avatar-circle"
+            autoPlay
+            loop
+            muted
+            playsInline
+            onClick={() => setIsAvatarOpen(true)}
+            aria-label={`${CONTACT.name} avatar (click to enlarge)`}
+          />
 
           <div>
             <h1 className="hero-title">
@@ -500,11 +537,37 @@ export default function Portfolio() {
         </motion.div>
       </motion.section>
 
-      {/* avatar modal */}
+      {/* avatar modal (shows larger looping video) */}
       {isAvatarOpen && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setIsAvatarOpen(false)} style={{position:'fixed',inset:0,display:'grid',placeItems:'center',background:'rgba(2,6,23,0.6)',zIndex:200}}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{maxWidth:420}}>
-            <img src="/avatar.png" alt="Larger portrait" className="modal-img" style={{width:'100%',borderRadius:14}} />
+        <div
+          className="modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setIsAvatarOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            background: "rgba(2,6,23,0.6)",
+            zIndex: 200,
+            padding: 20,
+          }}
+        >
+          <div
+            className="modal-wrapper"
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: "transparent", padding: 12 }}
+          >
+            <video
+              src="/avatar-wave.mp4"
+              className="modal-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label={`${CONTACT.name} avatar larger view`}
+            />
           </div>
         </div>
       )}
