@@ -180,7 +180,7 @@ export default function Portfolio() {
   // NEW: menuOpen for mobile hamburger
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Inject CSS (updated to include mobile fixes + hamburger and video modal styles)
+  // Inject CSS (updated to include avatar video styles + mobile fixes)
   useEffect(() => {
     const id = "portfolio-inline-styles-fixed-contact";
     const existing = document.getElementById(id);
@@ -237,35 +237,50 @@ export default function Portfolio() {
         .hero-ctas .btn{width:88%;max-width:320px}
       }
 
-      /* avatar video circle */
-      .avatar-circle{
-        width:120px;
-        height:120px;
-        border-radius:999px;
-        object-fit:cover;
-        border:3px solid rgba(124,155,255,0.12);
-        box-shadow:0 8px 22px rgba(2,6,23,0.2);
-        cursor:pointer;
-        transition:transform .18s;
+      /* ===== AVATAR VIDEO WRAPPER ===== */
+      .avatar-wrap {
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        overflow: hidden;              /* crop to circle */
+        display: inline-block;
+        position: relative;
+        flex-shrink: 0;
+        box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+        background: radial-gradient(circle at 30% 20%, rgba(124,155,255,0.12), rgba(0,0,0,0.03));
+        border: 4px solid rgba(255,255,255,0.06);
+        cursor: pointer;
       }
-      .avatar-circle:hover{transform:scale(1.04)}
-      /* large modal video */
-      .modal-video {
-        width:100%;
-        height:auto;
-        border-radius:12px;
-        display:block;
+      /* Make sure the entire avatar stays visible: contain forces whole frame inside circle */
+      .avatar-wrap video.avatar-video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;       /* show whole avatar instead of cropping */
+        object-position: center center; /* adjust if you want the subject shifted */
+        display: block;
+        background: var(--card);
       }
-      .modal-wrapper {
-        max-width:640px;
-        width:94%;
-        box-shadow:0 30px 80px rgba(2,6,23,0.6);
-        border-radius:14px;
-        overflow:hidden;
+      @media(min-width: 1100px){
+        .avatar-wrap { width: 140px; height: 140px; }
       }
 
-      .hero-title{font-size:34px;line-height:1.02;margin:0;font-weight:800}
+      /* Slightly nicer modal video */
+      .modal-content .modal-video {
+        width: 100%;
+        height: auto;
+        max-width: 820px;
+        border-radius: 14px;
+        display:block;
+        background: var(--card);
+        box-shadow: 0 30px 80px rgba(2,6,23,0.5);
+      }
+
+      .avatar-circle{ /* keep a fallback class name in case something else references it */
+        display:none;
+      }
+
       .accent{color:var(--accent)}
+      .hero-title{font-size:34px;line-height:1.02;margin:0;font-weight:800}
       .role-type{color:var(--accent);font-weight:800}
       .cursor{display:inline-block;width:10px;margin-left:6px;animation:blink 1s steps(2,end) infinite}
       @keyframes blink{50%{opacity:0}}
@@ -488,19 +503,27 @@ export default function Portfolio() {
       {/* HERO */}
       <motion.section id="home" className="hero section" initial="hidden" animate="visible" variants={sectionVariant} transition={{ duration: 0.6 }}>
         <div className="hero-left">
-          {/* === VIDEO AVATAR (small circular, loop) ===
-              Place your file at: public/avatar-wave.mp4
-          */}
-          <video
-            src="/avatar-wave.mp4"
-            className="avatar-circle"
-            autoPlay
-            loop
-            muted
-            playsInline
+
+          {/* ===== REPLACED: avatar image -> circular video wrapper ===== */}
+          <div
+            className="avatar-wrap"
             onClick={() => setIsAvatarOpen(true)}
-            aria-label={`${CONTACT.name} avatar (click to enlarge)`}
-          />
+            role="button"
+            aria-label="Open avatar preview"
+            title="Click to enlarge avatar"
+          >
+            {/* Put your video file in public/avatar-video.mp4 (or update the path) */}
+            <video
+              src="/avatar-video.mp4"
+              className="avatar-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster="/avatar-poster.png"
+            />
+          </div>
 
           <div>
             <h1 className="hero-title">
@@ -537,36 +560,20 @@ export default function Portfolio() {
         </motion.div>
       </motion.section>
 
-      {/* avatar modal (shows larger looping video) */}
+      {/* avatar modal */}
       {isAvatarOpen && (
-        <div
-          className="modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setIsAvatarOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "grid",
-            placeItems: "center",
-            background: "rgba(2,6,23,0.6)",
-            zIndex: 200,
-            padding: 20,
-          }}
-        >
-          <div
-            className="modal-wrapper"
-            onClick={(e) => e.stopPropagation()}
-            style={{ background: "transparent", padding: 12 }}
-          >
+        <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setIsAvatarOpen(false)} style={{position:'fixed',inset:0,display:'grid',placeItems:'center',background:'rgba(2,6,23,0.6)',zIndex:200}}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{maxWidth:900, width:"92%", padding:18}}>
             <video
-              src="/avatar-wave.mp4"
+              src="/avatar-video.mp4"
               className="modal-video"
               autoPlay
               loop
               muted
+              controls
               playsInline
-              aria-label={`${CONTACT.name} avatar larger view`}
+              style={{ width: "100%", borderRadius: 14, display: "block" }}
+              poster="/avatar-poster.png"
             />
           </div>
         </div>
