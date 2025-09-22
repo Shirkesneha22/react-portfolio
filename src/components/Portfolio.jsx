@@ -161,7 +161,20 @@ const TYPE_PHRASES = [
   "Web Designer / Freelancer",
 ];
 
-/* ---------- COMPONENT ---------- */
+/* ---------- NEW: achievements data ---------- */
+/* Put the certificate image at public/certificates/hackerrank-sql-basic.png */
+const achievements = [
+  {
+    id: "hr-sql-basic-2025",
+    title: "SQL (Basic)",
+    issuer: "HackerRank",
+    date: "22 Sep, 2025",
+    image: "/certificates/hackerrank-sql-basic.png", // add this file in public/
+    url: "https://www.hackerrank.com/certificates/50bc897a8f54",
+    description: "HackerRank Skill Certification — SQL (Basic)",
+  },
+];
+
 export default function Portfolio() {
   const formRef = useRef(null);
   const [theme, setTheme] = useState(() =>
@@ -180,7 +193,7 @@ export default function Portfolio() {
   // NEW: menuOpen for mobile hamburger
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Inject CSS (updated to include avatar video styles + mobile fixes)
+  // Inject CSS (updated to include achievements)
   useEffect(() => {
     const id = "portfolio-inline-styles-fixed-contact";
     const existing = document.getElementById(id);
@@ -206,7 +219,7 @@ export default function Portfolio() {
       }
 
       html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
-      /* ADD top padding so sticky nav doesn't overlap hero on mobile */
+      /* top padding so sticky nav doesn't overlap hero on mobile */
       .container{max-width:1100px;margin:0 auto;padding:80px 20px 20px} 
 
       /* NAV */
@@ -242,7 +255,7 @@ export default function Portfolio() {
         width: 120px;
         height: 120px;
         border-radius: 999px;
-        overflow: hidden;              /* crop to circle */
+        overflow: hidden;
         display: inline-block;
         position: relative;
         flex-shrink: 0;
@@ -251,12 +264,11 @@ export default function Portfolio() {
         border: 4px solid rgba(255,255,255,0.06);
         cursor: pointer;
       }
-      /* Make sure the entire avatar stays visible: contain forces whole frame inside circle */
       .avatar-wrap video.avatar-video {
         width: 100%;
         height: 100%;
-        object-fit: contain;       /* show whole avatar instead of cropping */
-        object-position: center center; /* adjust if you want the subject shifted */
+        object-fit: contain;
+        object-position: center center;
         display: block;
         background: var(--card);
       }
@@ -264,7 +276,6 @@ export default function Portfolio() {
         .avatar-wrap { width: 140px; height: 140px; }
       }
 
-      /* Slightly nicer modal video */
       .modal-content .modal-video {
         width: 100%;
         height: auto;
@@ -275,9 +286,7 @@ export default function Portfolio() {
         box-shadow: 0 30px 80px rgba(2,6,23,0.5);
       }
 
-      .avatar-circle{ /* keep a fallback class name in case something else references it */
-        display:none;
-      }
+      .avatar-circle{ display:none; }
 
       .accent{color:var(--accent)}
       .hero-title{font-size:34px;line-height:1.02;margin:0;font-weight:800}
@@ -321,6 +330,17 @@ export default function Portfolio() {
       .timeline-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
       .timeline-period{color:var(--muted);font-size:13px}
       .muted{color:var(--muted)}
+
+      /* ===== ACHIEVEMENTS ===== */
+      .achievements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+      @media(max-width:980px){ .achievements-grid{grid-template-columns:1fr} }
+      .cert-card{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.02));border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center;border:1px solid rgba(255,255,255,0.04)}
+      .cert-thumb{width:120px;height:80px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#fff}
+      .cert-meta{flex:1;display:flex;flex-direction:column;gap:6px}
+      .cert-title{font-weight:700}
+      .cert-issuer{color:var(--muted);font-size:13px}
+      .cert-actions{display:flex;gap:8px;align-items:center}
+      .cert-link{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);text-decoration:none}
 
       /* Contact: FIXED LAYOUT */
       .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
@@ -369,7 +389,7 @@ export default function Portfolio() {
 
   // Scroll spy
   useEffect(() => {
-    const ids = ["home", "projects", "skills", "experience", "contact", "publications"];
+    const ids = ["home", "achievements", "projects", "skills", "experience", "contact", "publications"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -462,6 +482,7 @@ export default function Portfolio() {
           {/* Desktop nav */}
           <nav className="nav-links" aria-label="Page sections">
             <a href="#home" className={active === "home" ? "active" : ""}>Home</a>
+            <a href="#achievements" className={active === "achievements" ? "active" : ""}>Achievements</a>
             <a href="#projects" className={active === "projects" ? "active" : ""}>Projects</a>
             <a href="#skills" className={active === "skills" ? "active" : ""}>Skills</a>
             <a href="#experience" className={active === "experience" ? "active" : ""}>Experience</a>
@@ -482,6 +503,7 @@ export default function Portfolio() {
           {menuOpen && (
             <nav className="mobile-nav" aria-label="Mobile sections">
               <a href="#home" onClick={handleNavClick}>Home</a>
+              <a href="#achievements" onClick={handleNavClick}>Achievements</a>
               <a href="#projects" onClick={handleNavClick}>Projects</a>
               <a href="#skills" onClick={handleNavClick}>Skills</a>
               <a href="#experience" onClick={handleNavClick}>Experience</a>
@@ -504,7 +526,7 @@ export default function Portfolio() {
       <motion.section id="home" className="hero section" initial="hidden" animate="visible" variants={sectionVariant} transition={{ duration: 0.6 }}>
         <div className="hero-left">
 
-          {/* ===== REPLACED: avatar image -> circular video wrapper ===== */}
+          {/* avatar video wrapper */}
           <div
             className="avatar-wrap"
             onClick={() => setIsAvatarOpen(true)}
@@ -512,7 +534,6 @@ export default function Portfolio() {
             aria-label="Open avatar preview"
             title="Click to enlarge avatar"
           >
-            {/* Put your video file in public/avatar-video.mp4 (or update the path) */}
             <video
               src="/avatar-video.mp4"
               className="avatar-video"
@@ -578,6 +599,28 @@ export default function Portfolio() {
           </div>
         </div>
       )}
+
+      {/* ACHIEVEMENTS */}
+      <motion.section id="achievements" className="section" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant} transition={{ duration: 0.5 }}>
+        <h2 style={{ margin: 0 }}>Achievements</h2>
+        <div className="achievements-grid" style={{ marginTop: 12 }}>
+          {achievements.map((a) => (
+            <div className="cert-card" key={a.id}>
+              <img src={a.image} alt={a.title + " certificate"} className="cert-thumb" />
+              <div className="cert-meta">
+                <div className="cert-title">{a.title}</div>
+                <div className="cert-issuer">{a.issuer} • <span className="muted">{a.date}</span></div>
+                <div style={{ color: "var(--muted)", fontSize: 13 }}>{a.description}</div>
+                <div className="cert-actions">
+                  <a className="cert-link" href={a.url} target="_blank" rel="noreferrer">
+                    View Certificate <FaExternalLinkAlt style={{ width: 12 }} />
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.section>
 
       {/* SKILLS */}
       <motion.section id="skills" className="section" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant} transition={{ duration: 0.5 }}>
