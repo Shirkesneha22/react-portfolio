@@ -151,7 +151,7 @@ const CONTACT = {
   phone: "+91 7888 076 881",
   linkedin: "https://www.linkedin.com/in/sneha-shirke-1b060428a/",
   portfolio: "https://snehashirke.netlify.app/",
-  resumePath: "/Sneha-Shirke-Resume.pdf",
+  resumePath: "/sneha.pdf",
 };
 
 const TYPE_PHRASES = [
