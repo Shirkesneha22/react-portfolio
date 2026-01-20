@@ -622,7 +622,7 @@ export default function Portfolio() {
         <div className="achievements-grid" style={{ marginTop: 12 }}>
           {achievements.map((a) => (
             <div className="cert-card" key={a.id}>
-              <img src=(.) alt={a.title + " certificate"} className="cert-thumb" />
+              <img src={a.image} alt={a.title + " certificate"} className="cert-thumb" />
               <div className="cert-meta">
                 <div className="cert-title">{a.title}</div>
                 <div className="cert-issuer">{a.issuer} • <span className="muted">{a.date}</span></div>
