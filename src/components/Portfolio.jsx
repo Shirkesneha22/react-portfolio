@@ -20,8 +20,17 @@ import { MdDesignServices } from "react-icons/md";
 
 /* ---------- DATA (unchanged) ---------- */
 const projects = [
-  {
+    {
     id: 1,
+    title: "Indiapropertys - Real Estate platform",
+    description:
+      "ML-based app detects plant diseases from leaf images and provides treatment & fertilizer suggestions.",
+    tech: ["React.js", "Php", "SQL", "Google vision api ", "Mapbox Api"],
+    live: "https://indiapropertys.com/",
+    img: "https://blogs.indiapropertys.com/images/browserlogo.jpg",
+  },
+  {
+    id: 2,
     title: "AgroAI – Plant Disease Detection",
     description:
       "ML-based app detects plant diseases from leaf images and provides treatment & fertilizer suggestions.",
@@ -31,7 +40,7 @@ const projects = [
     img: "https://bizclik-cms-prod.s3.eu-west-2.amazonaws.com/images/404no22rkhc9854c101120203432.jpeg",
   },
   {
-    id: 2,
+    id: 3,
     title: "Personal Portfolio Website",
     description:
       "Modern portfolio showcasing skills, projects, and contact details. Responsive + SEO optimized.",
@@ -41,7 +50,7 @@ const projects = [
     img: "Portfolio.png",
   },
   {
-    id: 3,
+    id: 4,
     title: "Tours & Travels Website",
     description:
       "Responsive travel booking site with package galleries, itineraries, and user login/signup (MySQL).",
@@ -51,7 +60,7 @@ const projects = [
     img: "tourist.png",
   },
   {
-    id: 4,
+    id: 5,
     title: "To-Do List App",
     description:
       "Task manager to add/edit/complete/delete tasks with data persistence using Local Storage.",
@@ -61,7 +70,7 @@ const projects = [
     img: "http://www.clipartbest.com/cliparts/di7/Lgd/di7Lgd4xT.png",
   },
   {
-    id: 5,
+    id: 6,
     title: "Quiz App",
     description:
       "Interactive quiz app with multiple-choice questions, score tracking and responsive UI.",
@@ -115,8 +124,15 @@ const experience = [
     period: "Feb 2025 – Jul 2025",
     details: `Delivered front-end solutions using React, Redux, HTML, CSS. Collaborated on REST API integration and participated in code reviews.`,
   },
-  {
+    {
     id: 2,
+    role: "Software Developer-Team Lead",
+    company: "Indiapropertys, Pune",
+    period: "Oct 2026 – Present",
+    details: `Delivered front-end solutions using React, Redux, HTML, CSS. Collaborated on REST API integration and participated in code reviews.`,
+  },
+  {
+    id: 3,
     role: "Freelance Developer",
     company: "Client Projects",
     period: "Sep 2024 – Present",
